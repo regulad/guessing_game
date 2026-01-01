@@ -7,18 +7,22 @@ fn main() {
     let stdin_handle = io::stdin();
 
     println!("how many bands do you think i got");
-    let secret_number: u8 = rand::thread_rng().gen_range(1..=100);
-    println!("(man, i wish they didn't know i was thinking {secret_number})");
+    let secret_number: u32 = rand::thread_rng().gen_range(1..=100);
+    // println!("(man, i wish they didn't know i was thinking {secret_number})");
 
     loop {
-        let guess: u8 = {
+        let guess: u32 = {
+            // scope is created to drop guess_string asap
             let mut guess_string = String::new();
             stdin_handle.read_line(&mut guess_string).expect("Failed!");
             // this works the same way as kotlin scopes
-            guess_string
-                .trim()
-                .parse()
-                .expect("that ain't no number, fool!")
+            match guess_string.trim().parse() {
+                Ok(num) => num,
+                Err(_) => {
+                    println!("nah u tweakin say a number");
+                    continue;
+                }
+            }
         };
         // in python, i would drop the guess variable by calling del. however the must "rustic" way to
         // do it is by having the name shadowed OR doing it in a scope.
